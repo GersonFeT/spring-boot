@@ -19,46 +19,40 @@ public class UserController {
     final UserRepository userRepository;
 
     @GetMapping
-    public List<User> getUserList() {
+    public List<Users> getUserList() {
         return userRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable UUID id) {
-        Optional <User> userFound = userRepository.findById(id);
+    public Users getUserById(@PathVariable UUID id) {
+        Optional <Users> userFound = userRepository.findById(id);
         if(userFound.isPresent()){
-            return userFound;
+            return userFound.get();
+        } else {
+            throw new RuntimeException("Couldn't find user");
         }
     }
 
 
     @PostMapping
-    public User postUser(@RequestBody User user) {
+    public Users postUser(@RequestBody Users user) {
         return userRepository.save(user);
 
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable UUID id,@RequestBody User user) {
-        Optional<User> savedUser = userRepository.findById(id);
-        if(savedUser.isPresent()){
-            User updatedUser = savedUser.get();
-            updatedUser.setNome(user.getNome());
-            updatedUser.setCpf(user.getCpf());
-            updatedUser.setEmail(user.getEmail());
-            return userRepository.save(updatedUser);
-        } else {
-            throw new RuntimeException("Couldn't find user ");
-        }
+    public Users updateUser(@PathVariable UUID id,@RequestBody Users user) {
+            Users savedUser = getUserById(id);
+            savedUser.setNome(user.getNome());
+            savedUser.setCpf(user.getCpf());
+            savedUser.setEmail(user.getEmail());
+
+            return userRepository.save(savedUser);
+
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable UUID id) {
-        Optional<User> userOptional = userRepository.findById(id);
-        if(userOptional.isPresent()){
-            userRepository.deleteById(id);
-        } else {
-          throw new RuntimeException("Couldn't find user");
-        }
+        userRepository.delete(getUserById(id));
     }
 }
