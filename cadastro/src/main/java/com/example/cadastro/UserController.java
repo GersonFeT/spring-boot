@@ -1,5 +1,6 @@
 package com.example.cadastro;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class UserController {
 
 
     @PostMapping
-    public Users postUser(@RequestBody Users user) {
+    public Users postUser(@Valid @RequestBody Users user) {
         return userRepository.save(user);
 
     }
