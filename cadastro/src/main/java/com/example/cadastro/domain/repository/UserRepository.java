@@ -1,5 +1,6 @@
-package com.example.cadastro;
+package com.example.cadastro.domain.repository;
 
+import com.example.cadastro.domain.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

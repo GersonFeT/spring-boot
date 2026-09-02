@@ -1,9 +1,8 @@
-package com.example.cadastro;
+package com.example.cadastro.domain.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import org.hibernate.validator.constraints.br.CPF;
 
 import java.util.UUID;
 
@@ -30,6 +29,11 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
+
+    @NotBlank(message = "Senha é obrigatória")
+    @Size(min = 4, max = 8, message = "Senha deve ter entre 4 e 8 caracteres")
+    @Column(name = "senha", nullable = false, length = 8)
+    private String senha;
 
     @NotBlank(message = "Nome é obrigatório")
     @Size(min = 2, max = 150, message = "Nome deve ter entre 2 e 150 caracteres")
