@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.br.CPF;
 
 public record UserRequestDTO (
 
@@ -13,7 +14,8 @@ public record UserRequestDTO (
     String nome,
 
     @NotBlank(message = "CPF é obrigatório")
-    @Pattern(regexp = "\\d{11}", message = "CPF deve conter exatamente 11 dígitos")
+    @CPF(message = "CPF inválido")
+    //@Pattern(regexp = "\\d{11}", message = "CPF deve conter exatamente 11 dígitos")
     String cpf,
 
     @NotBlank(message = "E-mail é obrigatório")

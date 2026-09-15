@@ -1,19 +1,15 @@
-package com.example.cadastro.interface_ui;
+package com.example.cadastro.interface_ui.controller;
 
 import com.example.cadastro.application.dto.UserRequestDTO;
 import com.example.cadastro.application.dto.UserResponseDTO;
 import com.example.cadastro.application.service.UserService;
-import com.example.cadastro.domain.repository.UserRepository;
-import com.example.cadastro.domain.entity.Users;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController

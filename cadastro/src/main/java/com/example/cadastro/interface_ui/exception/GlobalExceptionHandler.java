@@ -1,5 +1,6 @@
 package com.example.cadastro.interface_ui.exception;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -7,7 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,16 +18,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ProblemDetail handleTypeMismatch(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
-        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        problem.setTitle("Invalid parameter type");
-        problem.setDetail(String.format(
-                "Parameter '%s' must be type '%s'. Received value: '%s'",
-                ex.getName(),
-                ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "Unknown",
-                ex.getValue()
-        ));
-        problem.setInstance(URI.create(request.getRequestURI()));
-        return problem;
+        return buildProblem(
+                HttpStatus.BAD_REQUEST,
+                "Parameter type invalid",
+                String.format(
+                        "Parameter '%s' must be '%s'. Received value: '%s'",
+                        ex.getName(),
+                        ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "unknown",
+                        ex.getValue()
+                ),
+                request.getRequestURI()
+        );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -50,6 +51,20 @@ public class GlobalExceptionHandler {
         problem.setProperty("errors", errors);
         return problem;
     }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ProblemDetail handleDataIntegrity(
+            DataIntegrityViolationException ex,
+            HttpServletRequest request
+    ) {
+        return buildProblem(
+                HttpStatus.CONFLICT,
+                "Data conflict",
+                "The request violates data integration restriction",
+                request.getRequestURI()
+        );
+    }
+
     @ExceptionHandler(InternalError.class)
     public ProblemDetail handleInternalError(InternalError ex, HttpServletRequest request) {
         return buildProblem(
